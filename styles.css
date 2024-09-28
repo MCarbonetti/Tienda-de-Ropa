@@ -1,0 +1,149 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Estilos del encabezado */
+header h1 {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+header h4 {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+/* Estilos de los títulos de secciones */
+article h2 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+/* Estilos de las tarjetas de producto */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+span {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Estilos de botones en el carrito */
+#listaCarrito li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#listaCarrito button {
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#listaCarrito button:hover {
+    background-color: #c82333;
+}
+
+/* Estilos del formulario de compra final */
+#formCompraFinal {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+}
+
+#formCompraFinal label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+#formCompraFinal input[type="text"],
+#formCompraFinal input[type="email"],
+#formCompraFinal input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+#formCompraFinal input[type="submit"] {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#formCompraFinal input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    header h4 {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
