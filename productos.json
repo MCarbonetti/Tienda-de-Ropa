@@ -1,0 +1,7 @@
+[
+    { "nombre": "Remeras", "id": "001", "tipo": "Prenda", "precio": 25, "stock": 50, "descripcion": "Remeras de algodón de alta calidad." },
+    { "nombre": "Pantalones", "id": "002", "tipo": "Prenda", "precio": 40, "stock": 40, "descripcion": "Pantalones de Jean." },
+    { "nombre": "Camperas", "id": "003", "tipo": "Prenda", "precio": 60, "stock": 30, "descripcion": "Camperas Rompeviento." },
+    { "nombre": "Zapatillas", "id": "004", "tipo": "Calzado", "precio": 80, "stock": 20, "descripcion": "Zapatillas de Lona." },
+    { "nombre": "Gorras", "id": "005", "tipo": "Accesorio", "precio": 15, "stock": 100, "descripcion": "Gorras de Lona de alta Calidad." }
+]

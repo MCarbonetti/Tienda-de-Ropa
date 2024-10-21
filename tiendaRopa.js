@@ -9,107 +9,73 @@ class Producto {
     }
 }
 
-// Array de productos base 
-const productosBase = [
-    {
-        nombre: "Remeras",
-        id: "001",
-        tipo: "Prenda",
-        precio: 25,
-        stock: 50,
-        descripcion: "Remeras de algodón de alta calidad."
-    },
-    {
-        nombre: "Pantalones",
-        id: "002",
-        tipo: "Prenda",
-        precio: 40,
-        stock: 40,
-        descripcion: "Pantalones de Jean."
-    },
-    {
-        nombre: "Camperas",
-        id: "003",
-        tipo: "Prenda",
-        precio: 60,
-        stock: 30,
-        descripcion: "Camperas Rompeviento."
-    },
-    {
-        nombre: "Zapatillas",
-        id: "004",
-        tipo: "Calzado",
-        precio: 80,
-        stock: 20,
-        descripcion: "Zapatillas de Lona."
-    },
-    {
-        nombre: "Gorras",
-        id: "005",
-        tipo: "Accesorio",
-        precio: 15,
-        stock: 100,
-        descripcion: "Gorras de Lona de alta Calidad."
-    }
-];
-
-// Cargar datos desde localStorage o inicializar vacíos
 let productos = JSON.parse(localStorage.getItem("productos")) || [];
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 
-// Función para agregar un producto al array de productos
+const mostrarToast = (mensaje) => {
+    Toastify({
+        text: mensaje,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+        style: {
+            background: "linear-gradient(to right, #007bff, #000000)",
+        }
+    }).showToast();
+};
+
 const agregarProducto = ({ nombre, id, tipo, precio, stock, descripcion }) => {
     if (productos.some(prod => prod.id === id)) {
-        console.warn(`Ya existe un producto con el ID: ${id}.`);
+        mostrarToast(`Ya existe un producto con el ID: ${id}.`);
     } else {
         const productoNuevo = new Producto(nombre, id, tipo, precio, stock, descripcion);
         productos.push(productoNuevo);
-        console.log(`Producto agregado: ${nombre}`);
+        mostrarToast(`Producto agregado: ${nombre}`);
     }
 };
 
-// Función para cargar productos preexistentes si el array está vacío
-const productosPreexistentes = () => {
+const productosPreexistentes = async () => {
     if (productos.length === 0) {
-        productosBase.forEach(prod => agregarProducto(prod));
-        localStorage.setItem("productos", JSON.stringify(productos));
-        console.log("Productos preexistentes cargados en localStorage.");
-    } else {
-        console.log("Productos cargados desde localStorage.");
+        try {
+            const response = await fetch('./productos.json');
+            const productosData = await response.json();
+            productosData.forEach(prod => agregarProducto(prod));
+            localStorage.setItem("productos", JSON.stringify(productos));
+        } catch (error) {
+            console.error("Error cargando los productos:", error);
+            mostrarToast("Error al cargar los productos.");
+        }
     }
 };
 
-// Función para calcular el total del carrito
 const totalCarrito = () => {
     return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 };
 
-// Función para renderizar el total en el DOM
 const totalCarritoRender = () => {
     const carritoTotal = document.getElementById("carritoTotal");
     carritoTotal.innerHTML = `Precio total: $${totalCarrito()}`;
 };
 
-// Función para agregar productos al carrito
 const agregarCarrito = (objetoCarrito) => {
     const existe = carrito.find(item => item.id === objetoCarrito.id);
     if (existe) {
         existe.cantidad += objetoCarrito.cantidad;
-        console.log(`Cantidad actualizada para ${existe.nombre}: ${existe.cantidad}`);
+        mostrarToast(`Cantidad actualizada para ${existe.nombre}: ${existe.cantidad}`);
     } else {
         carrito.push(objetoCarrito);
-        console.log(`Producto agregado al carrito: ${objetoCarrito.nombre}`);
+        mostrarToast(`Producto agregado al carrito: ${objetoCarrito.nombre}`);
     }
     localStorage.setItem("carrito", JSON.stringify(carrito));
     renderizarCarrito();
     totalCarritoRender();
 };
 
-// Función para renderizar el carrito en el DOM
 const renderizarCarrito = () => {
     const listaCarrito = document.getElementById("listaCarrito");
-    listaCarrito.innerHTML = ""; 
+    listaCarrito.innerHTML = "";
 
     carrito.forEach(({ nombre, precio, cantidad, id }) => {
         let elementoLista = document.createElement("li");
@@ -123,36 +89,32 @@ const renderizarCarrito = () => {
         `;
         listaCarrito.appendChild(elementoLista);
 
-        // Añadir evento al botón de eliminar
         const botonBorrar = document.getElementById(`eliminarCarrito${id}`);
         botonBorrar.addEventListener("click", () => {
             carrito = carrito.filter(elemento => elemento.id !== id);
             localStorage.setItem("carrito", JSON.stringify(carrito));
             renderizarCarrito();
             totalCarritoRender();
-            console.log(`Producto eliminado del carrito: ${nombre}`);
+            mostrarToast(`Producto eliminado del carrito: ${nombre}`);
         });
     });
 };
 
-// Función para borrar todo el carrito
 const borrarCarrito = () => {
     carrito.length = 0; 
     localStorage.setItem("carrito", JSON.stringify(carrito));
     renderizarCarrito();
     totalCarritoRender();
-    console.log("Carrito vaciado.");
+    mostrarToast("Carrito vaciado.");
 };
 
-// Función para renderizar los productos en el DOM
 const renderizarProductos = (arrayUtilizado) => {
     const contenedorProductos = document.getElementById("contenedorProductos");
     contenedorProductos.innerHTML = ""; 
 
     arrayUtilizado.forEach(({ nombre, id, tipo, precio, stock, descripcion }) => {
         const prodCard = document.createElement("div");
-        prodCard.classList.add("col-md-4", "col-sm-6");
-        prodCard.classList.add("card");
+        prodCard.classList.add("col-md-4", "col-sm-6", "card");
         prodCard.style = "width: 100%; margin-bottom: 20px;";
         prodCard.id = id;
         prodCard.innerHTML = `
@@ -174,7 +136,6 @@ const renderizarProductos = (arrayUtilizado) => {
         `;
         contenedorProductos.appendChild(prodCard);
 
-        // Añadir evento al botón de agregar
         const btn = document.getElementById(`botonProd${id}`);
         btn.addEventListener("click", (evento) => {
             evento.preventDefault();
@@ -184,17 +145,16 @@ const renderizarProductos = (arrayUtilizado) => {
                 agregarCarrito({ nombre, id, tipo, precio, stock, descripcion, cantidad });
                 contadorInput.value = 1; 
             } else {
-                alert("Cantidad inválida o excede el stock disponible.");
+                mostrarToast("Cantidad inválida o excede el stock disponible.");
             }
         });
     });
 };
 
-// Función para finalizar la compra
 const finalizarCompra = (event) => {
     event.preventDefault();
     if (carrito.length === 0) {
-        alert("El carrito está vacío.");
+        mostrarToast("El carrito está vacío.");
         return;
     }
 
@@ -212,29 +172,24 @@ const finalizarCompra = (event) => {
 
     const mensaje = document.getElementById("carritoTotal");
     mensaje.innerHTML = "¡Muchas gracias por tu compra! Te esperamos pronto.";
-    alert("Compra finalizada exitosamente.");
-    console.log("Pedido realizado:", ticket);
+    mostrarToast("Compra finalizada con éxito.");
 };
 
-// Función principal de la aplicación
-const app = () => {
-    productosPreexistentes();
+const app = async () => {
+    await productosPreexistentes();
     renderizarProductos(productos);
     renderizarCarrito();
     totalCarritoRender();
 };
 
-// Ejecutar la aplicación una vez que el DOM esté cargado
 document.addEventListener("DOMContentLoaded", () => {
     app();
 
-    // Evento para finalizar la compra
     const compraFinal = document.getElementById("formCompraFinal");
     compraFinal.addEventListener("submit", (event) => {
         finalizarCompra(event);
     });
 
-    // Evento para filtrar productos por tipo
     const selectorTipo = document.getElementById("tipoProducto");
     selectorTipo.addEventListener("change", (evt) => {
         const tipoSeleccionado = evt.target.value;
